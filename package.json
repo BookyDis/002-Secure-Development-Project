@@ -1,0 +1,23 @@
+{
+  "name": "002-secure-development-project",
+  "version": "1.0.0",
+  "description": "DSS002",
+  "main": "app.js",
+  "scripts": {
+    "start": "node app"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/BookyDis/002-Secure-Development-Project.git"
+  },
+  "author": "Nick Ollie Book",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/BookyDis/002-Secure-Development-Project/issues"
+  },
+  "homepage": "https://github.com/BookyDis/002-Secure-Development-Project#readme",
+  "dependencies": {
+    "express": "^4.21.2",
+    "pug": "^3.0.3"
+  }
+}
