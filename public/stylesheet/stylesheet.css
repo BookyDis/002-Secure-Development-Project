@@ -1,0 +1,113 @@
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-size: 24px;
+}
+
+header {
+    background-color: rgb(0, 0, 159);
+    color: aliceblue;
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+}
+
+footer{
+    text-align: center;
+    background-color: rgb(0, 0, 159);
+    color: aliceblue;
+    width: 100%;
+    padding: 10px;
+}
+
+#searchContainer{
+    display: flex;
+}
+
+#searchForm{
+    margin-left: auto;
+}
+
+#searchDropdown{
+    list-style-type: none;
+}
+
+.nav{
+    position: fixed;
+    top: 0;
+    right: 0;
+    padding: 10px;
+    background-color: rgb(0, 0, 159);
+}
+
+.navList{
+    display: flex;
+    margin: 0;
+    padding: 0;
+    list-style-type: none;
+}
+
+.navItem{
+    margin-left: 20px;
+}
+
+.navLink{
+    text-decoration: none;
+    color: aliceblue;
+}
+
+.navItem:hover{
+    text-decoration: underline;
+}
+
+#logoContainer{
+    display: flex;
+    align-items: center;
+}
+
+#tomato{
+    margin-right: 10px;
+    height: 200px;
+    width: 200px;
+    margin-right: 50px;
+    margin-left: 20px;
+}
+
+#titleContainer{
+    display: flex;
+    align-items: last baseline;
+}
+
+#title{
+    color: aliceblue;
+    font-size: 96px;
+}
+
+#logoAndTitleContainer{
+    display: flex;
+}
+
+#movieAndPostContainer{
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+    width: 100%;
+    padding-top: 15px;
+}
+
+#movieContainer{
+    border: 2px solid rgb(0, 0, 159);
+    text-align: center;
+}
+
+#postContainer{
+    border: 2px solid rgb(0, 0, 159);
+    text-align: center;
+}
+
+.fixedFooter{
+    position: fixed;
+    left: 0;
+    bottom: 0;
+}

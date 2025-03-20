@@ -1,8 +1,33 @@
 doctype html
 html
     head
-        title Home
+    link(rel='stylesheet', href='/stylesheet/stylesheet.css')
+    header
+        nav(class="nav")
+            div(class="navContainer")
+                ul(class="navList")
+                    li(class="navItem")
+                        a(href='/' class="navLink") Home
+                    li(class="navItem")
+                        a(href='/postsPage' class="navLink") Posts Page
+                    li(class="navItem")
+                        a(href='/postsPage' class="navLink") Movies
+                    li(class="navItem")
+                        a(href='/postsPage' class="navLink") Sign Up
+                    li(class="navItem")
+                        a(href='/postsPage' class="navLink") Login
+        div(id="logoAndTitleContainer")
+            div(id="logoContainer")
+                img(src="/images/tomato.png" id="tomato")
+            div(id="titleContainer")
+                h1(id="title") Rotten Movies
     body
+        div(id="searchContainer")
+            form(id="searchForm")
+                div(id="search")
+                    input(type="text" id="searchBar")
+                    ul(id="searchDropdown", style="display:none;")
         block content
-        footer
-            p DSS002
+        footer DSS002 UG06
+        script(src="/javascript/searchbar.js")
+        script(src="/javascript/fixedFooter.js")
