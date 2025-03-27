@@ -20,7 +20,7 @@ app.get("/", function(req, res){
 //adding other routes
 app.get('/postsPage', function(req, res){
     res.render('postsPage', {
-        title:'Posts Page'
+        title:'Posts'
     })
 })
 
