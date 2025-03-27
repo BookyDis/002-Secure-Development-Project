@@ -111,3 +111,8 @@ footer{
     left: 0;
     bottom: 0;
 }
+
+#settings{
+   height: 30px;
+   width: 30px
+}
