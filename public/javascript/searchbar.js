@@ -1,7 +1,8 @@
 const searchBar = document.getElementById("searchBar");
 const pages = [
     {view: "/", name: "Home", content: "home login sign up movies posts reviews"},
-    {view: "/postsPage", name: "Post Page", content: "make a posts add delete edit"},
+    {view: "/postsPage", name: "Posts", content: "make a posts add delete edit view read"},
+    {view: "/moviesPage", name: "Movies", content: "movies watch review rate horror action drama romance thriller sci-fi sci fi science fiction comedy funny fantasy"}
 ];
 
 searchBar.addEventListener("keyup", (e) =>
