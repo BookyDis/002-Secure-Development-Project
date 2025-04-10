@@ -51,3 +51,4 @@ const doubleCsrfUtilities = doubleCsrf({
   ignoredMethods: ["GET", "HEAD", "OPTIONS"], // A list of request methods that will not be protected.
   getTokenFromRequest: (req) => req.headers["x-csrf-token"], // A function that returns the token from the request
 });
+
