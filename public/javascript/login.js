@@ -22,7 +22,7 @@ async function loginStep1(event) {
     }
 }
 
-// Step 2: Submit MFA token
+// Step 2: Submit MFA tokens
 async function verifyMFA(event) {
     event.preventDefault();
     const token = document.getElementById('token').value;
