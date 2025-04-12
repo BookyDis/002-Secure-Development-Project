@@ -1,0 +1,29 @@
+extends layout
+
+block content
+    div(id="signupContainer")
+        h2 Sign Up
+
+        // Step 1: Username + Password
+        div(id="step-1")
+            form(id="signupForm", onsubmit="signup(event)")
+                div(class="formGroup")
+                    label(for="username") Username:
+                    input(type="text" name="username" id="username" required)
+                div(class="formGroup")
+                    label(for="password") Password:
+                    input(type="password" name="password" id="password" required)
+                button(type="submit") Sign Up
+
+        // Step 2: Show QR code and verify MFA token
+        div(id="step-2", style="display:none;")
+            h3 Scan this QR Code in Google Authenticator
+            div(id="qrContainer")
+
+            h3 Enter MFA Token
+            form(id="verifyForm", onsubmit="verifySignup(event)")
+                input(type="text" id="token" placeholder="6-digit token" required)
+                button(type="submit") Verify Token
+
+    // External JavaScript for signup logic
+    script(src="/javascript/signup.js")
