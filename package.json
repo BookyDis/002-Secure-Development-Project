@@ -18,10 +18,12 @@
   },
   "homepage": "https://github.com/BookyDis/002-Secure-Development-Project#readme",
   "dependencies": {
+    "bcrypt": "^5.1.1",
     "cookie-parser": "^1.4.7",
     "csrf-csrf": "^3.1.0",
     "express": "^4.21.2",
     "express-session": "^1.18.1",
+    "pg": "^8.14.1",
     "pug": "^3.0.3",
     "qrcode": "^1.5.4",
     "speakeasy": "^2.0.0"

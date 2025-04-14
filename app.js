@@ -8,6 +8,36 @@ const speakeasy = require('speakeasy');
 const qrcode = require('qrcode');
 const session = require('express-session');
 
+//Post Gres SQL
+const { Pool } = require('pg');
+
+const db = new Pool({
+    user: 'DSS', // DB username
+    host: 'localhost',
+    database: 'dss_db', //  DB name created
+    password: 'DSSUG06', // PostgreSQL password
+    port: 5432,
+});
+//Encryption/Hashing
+const bcrypt = require('bcrypt');
+
+async function getUser(username) {
+    const res = await db.query('SELECT * FROM users WHERE username = $1', [username]);
+    return res.rows[0];
+}
+
+async function createUser(username, password, mfaSecret) {
+    const passwordHash = await bcrypt.hash(password, 10);
+    await db.query(
+        'INSERT INTO users (username, password, mfa_secret) VALUES ($1, $2, $3)',
+        [username, passwordHash, mfaSecret]
+    );
+}
+
+async function verifyUserMFA(username) {
+    await db.query('UPDATE users SET mfa_verified = true WHERE username = $1', [username]);
+}
+
 
 
 //app intialisation
@@ -19,7 +49,6 @@ app.use(session({
     resave: false,
     saveUninitialized: false
 }));
-const users = {}; //Temporary User Storage prior to database intergration
 
 app.use(express.static('public'));
 //cookie parser
@@ -81,16 +110,13 @@ const doubleCsrfUtilities = doubleCsrf({
 app.post('/signup', async (req, res) => {
     const { username, password } = req.body;
 
-    if (users[username]) {
+    const existing = await getUser(username);
+    if (existing) {
         return res.status(400).json({ message: 'User already exists' });
     }
 
     const secret = speakeasy.generateSecret({ name: `MyApp (${username})` });
-    users[username] = {
-        password,
-        mfaSecret: secret.base32,
-        verified: false
-    };
+    await createUser(username, password, secret.base32);
 
     qrcode.toDataURL(secret.otpauth_url, (err, data_url) => {
         if (err) return res.status(500).send('QR code error');
@@ -98,51 +124,59 @@ app.post('/signup', async (req, res) => {
     });
 });
 
+
 //MFA Verify Signup
-app.post('/verify-signup', (req, res) => {
+app.post('/verify-signup', async (req, res) => {
     const { username, token } = req.body;
-    const user = users[username];
+    const user = await getUser(username);
 
     if (!user) return res.status(404).json({ message: 'User not found' });
 
     const verified = speakeasy.totp.verify({
-        secret: user.mfaSecret,
+        secret: user.mfa_secret,
         encoding: 'base32',
         token
     });
 
     if (verified) {
-        user.verified = true;
+        await verifyUserMFA(username);
         return res.json({ message: 'Signup complete' });
     } else {
         return res.status(400).json({ message: 'Invalid token' });
     }
 });
 
-//Verify Login for USERNAME + PASSWORD
-app.post('/login-step-1', (req, res) => {
-    const { username, password } = req.body;
-    const user = users[username];
 
-    if (!user || !user.verified || user.password !== password) {
-        return res.status(401).json({ message: 'Invalid login or MFA not set' });
+//Verify Login for USERNAME + PASSWORD
+app.post('/login-step-1', async (req, res) => {
+    const { username, password } = req.body;
+    const user = await getUser(username);
+
+    if (!user || !user.mfa_verified) {
+        return res.status(401).json({ message: 'User not found or MFA not set' });
+    }
+
+    const match = await bcrypt.compare(password, user.password);
+    if (!match) {
+        return res.status(401).json({ message: 'Invalid password' });
     }
 
     req.session.pendingUser = username;
     res.json({ message: 'Password valid. Proceed with MFA.' });
 });
+
 //Verify Login for MFA Token
-app.post('/verify-mfa', (req, res) => {
+app.post('/verify-mfa', async (req, res) => {
     const { token } = req.body;
     const username = req.session.pendingUser;
-    const user = users[username];
+    const user = await getUser(username);
 
-    if (!user || !user.mfaSecret) {
+    if (!user || !user.mfa_secret) {
         return res.status(400).json({ message: 'Invalid session or user' });
     }
 
     const verified = speakeasy.totp.verify({
-        secret: user.mfaSecret,
+        secret: user.mfa_secret,
         encoding: 'base32',
         token
     });
@@ -155,3 +189,4 @@ app.post('/verify-mfa', (req, res) => {
     delete req.session.pendingUser;
     res.json({ message: 'Login successful with MFA' });
 });
+
