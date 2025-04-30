@@ -24,13 +24,18 @@ html
                 img(src="/images/tomato.png" id="tomato")
             div(id="titleContainer")
                 h1(id="title") Rotten Movies
-    body
         div(id="searchContainer")
             form(id="searchForm")
-                div(id="search")
-                    input(type="text" id="searchBar")
+                div(id="search" class="searchHoverContainer") 
+                    input(type="text" id="searchBar" placeholder="Search for...")
+                    div(class="popupInfo")
+                        | Searches are based on keywords.
+                        br
+                        | Relevant pages will show below.
                     ul(id="searchDropdown", style="display:none;")
+    body                
         block content
         footer DSS002 UG06
         script(src="/javascript/searchbar.js")
         script(src="/javascript/fixedFooter.js")
+        script(src="/javascript/movies.js")

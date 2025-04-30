@@ -1,0 +1,162 @@
+[
+    {
+      "name": "Inception",
+      "genre": "Sci-Fi",
+      "date": 2010,
+      "image": "https://image.tmdb.org/t/p/original/ljsZTbVsrQSqZgWeep2B1QiDKuh.jpg",
+      "leadActors": ["Leonardo DiCaprio", "Joseph Gordon-Levitt"],
+      "director": "Christopher Nolan"
+    },
+    {
+      "name": "The Dark Knight",
+      "genre": "Action",
+      "date": 2008,
+      "image": "https://image.tmdb.org/t/p/w500/qJ2tW6WMUDux911r6m7haRef0WH.jpg",
+      "leadActors": ["Christian Bale", "Heath Ledger"],
+      "director": "Christopher Nolan"
+    },
+    {
+      "name": "La La Land",
+      "genre": "Romance",
+      "date": 2016,
+      "image": "https://image.tmdb.org/t/p/w500/uDO8zWDhfWwoFdKS4fzkUJt0Rf0.jpg",
+      "leadActors": ["Ryan Gosling", "Emma Stone"],
+      "director": "Damien Chazelle"
+    },
+    {
+      "name": "Parasite",
+      "genre": "Thriller",
+      "date": 2019,
+      "image": "https://image.tmdb.org/t/p/w500/7IiTTgloJzvGI1TAYymCfbfl3vT.jpg",
+      "leadActors": ["Song Kang-ho", "Choi Woo-shik"],
+      "director": "Bong Joon-ho"
+    },
+    {
+      "name": "Coco",
+      "genre": "Animation",
+      "date": 2017,
+      "image": "https://image.tmdb.org/t/p/w500/gGEsBPAijhVUFoiNpgZXqRVWJt2.jpg",
+      "leadActors": ["Anthony Gonzalez", "Gael García Bernal"],
+      "director": "Lee Unkrich"
+    },
+    {
+      "name": "Interstellar",
+      "genre": "Sci-Fi",
+      "date": 2014,
+      "image": "https://image.tmdb.org/t/p/w500/rAiYTfKGqDCRIIqo664sY9XZIvQ.jpg",
+      "leadActors": ["Matthew McConaughey", "Anne Hathaway"],
+      "director": "Christopher Nolan"
+    },
+    {
+      "name": "The Godfather",
+      "genre": "Crime",
+      "date": 1972,
+      "image": "https://image.tmdb.org/t/p/w500/3bhkrj58Vtu7enYsRolD1fZdja1.jpg",
+      "leadActors": ["Marlon Brando", "Al Pacino"],
+      "director": "Francis Ford Coppola"
+    },
+    {
+      "name": "The Grand Budapest Hotel",
+      "genre": "Comedy",
+      "date": 2014,
+      "image": "https://image.tmdb.org/t/p/original/eWdyYQreja6JGCzqHWXpWHDrrPo.jpg",
+      "leadActors": ["Ralph Fiennes", "Tony Revolori"],
+      "director": "Wes Anderson"
+    },
+    {
+      "name": "The Shawshank Redemption",
+      "genre": "Drama",
+      "date": 1994,
+      "image": "https://image.tmdb.org/t/p/w500/q6y0Go1tsGEsmtFryDOJo3dEmqu.jpg",
+      "leadActors": ["Tim Robbins", "Morgan Freeman"],
+      "director": "Frank Darabont"
+    },
+    {
+      "name": "Her",
+      "genre": "Romantic Sci-Fi",
+      "date": 2013,
+      "image": "https://image.tmdb.org/t/p/original/lEIaL12hSkqqe83kgADkbUqEnvk.jpg",
+      "leadActors": ["Joaquin Phoenix", "Scarlett Johansson (voice)"],
+      "director": "Spike Jonze"
+    },
+    {
+      "name": "Get Out",
+      "genre": "Horror",
+      "date": 2017,
+      "image": "https://image.tmdb.org/t/p/w500/tFXcEccSQMf3lfhfXKSU9iRBpa3.jpg",
+      "leadActors": ["Daniel Kaluuya", "Allison Williams"],
+      "director": "Jordan Peele"
+    },
+    {
+      "name": "Whiplash",
+      "genre": "Drama",
+      "date": 2014,
+      "image": "https://image.tmdb.org/t/p/original/7fn624j5lj3xTme2SgiLCeuedmO.jpg",
+      "leadActors": ["Miles Teller", "J.K. Simmons"],
+      "director": "Damien Chazelle"
+    },
+    {
+      "name": "Arrival",
+      "genre": "Sci-Fi",
+      "date": 2016,
+      "image": "https://image.tmdb.org/t/p/w500/x2FJsf1ElAgr63Y3PNPtJrcmpoe.jpg",
+      "leadActors": ["Amy Adams", "Jeremy Renner"],
+      "director": "Denis Villeneuve"
+    },
+    {
+      "name": "The Social Network",
+      "genre": "Biography",
+      "date": 2010,
+      "image": "https://image.tmdb.org/t/p/w500/n0ybibhJtQ5icDqTp8eRytcIHJx.jpg",
+      "leadActors": ["Jesse Eisenberg", "Andrew Garfield"],
+      "director": "David Fincher"
+    },
+    {
+      "name": "Spirited Away",
+      "genre": "Fantasy",
+      "date": 2001,
+      "image": "https://image.tmdb.org/t/p/w500/39wmItIWsg5sZMyRUHLkWBcuVCM.jpg",
+      "leadActors": ["Rumi Hiiragi", "Miyu Irino"],
+      "director": "Hayao Miyazaki"
+    },
+    {
+      "name": "The Matrix",
+      "genre": "Sci-Fi",
+      "date": 1999,
+      "image": "https://image.tmdb.org/t/p/w500/f89U3ADr1oiB1s9GkdPOEpXUk5H.jpg",
+      "leadActors": ["Keanu Reeves", "Carrie-Anne Moss"],
+      "director": "Lana Wachowski & Lilly Wachowski"
+    },
+    {
+      "name": "The Lion King",
+      "genre": "Animation",
+      "date": 1994,
+      "image": "https://image.tmdb.org/t/p/w500/sKCr78MXSLixwmZ8DyJLrpMsd15.jpg",
+      "leadActors": ["Matthew Broderick", "James Earl Jones"],
+      "director": "Roger Allers, Rob Minkoff"
+    },
+    {
+      "name": "Titanic",
+      "genre": "Romance",
+      "date": 1997,
+      "image": "https://image.tmdb.org/t/p/w500/9xjZS2rlVxm8SFx8kPC3aIGCOYQ.jpg",
+      "leadActors": ["Leonardo DiCaprio", "Kate Winslet"],
+      "director": "James Cameron"
+    },
+    {
+      "name": "Joker",
+      "genre": "Psychological Thriller",
+      "date": 2019,
+      "image": "https://image.tmdb.org/t/p/w500/udDclJoHjfjb8Ekgsd4FDteOkCU.jpg",
+      "leadActors": ["Joaquin Phoenix", "Robert De Niro"],
+      "director": "Todd Phillips"
+    },
+    {
+      "name": "Everything Everywhere All At Once",
+      "genre": "Multiverse Adventure",
+      "date": 2022,
+      "image": "https://image.tmdb.org/t/p/w500/w3LxiVYdWWRvEVdn5RYq6jIqkb1.jpg",
+      "leadActors": ["Michelle Yeoh", "Ke Huy Quan"],
+      "director": "Daniel Kwan & Daniel Scheinert"
+    }
+  ]

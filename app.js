@@ -84,6 +84,12 @@ app.get('/postsPage', function (req, res) {
     })
 })
 
+app.get('/moviesPage', function (req, res) {
+    res.render('moviesPage', {
+        title: 'Movies'
+    })
+})
+
 app.get('/login', function (req, res) {
     res.render('login', {
         title: 'Login'
