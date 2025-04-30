@@ -8,6 +8,7 @@ const speakeasy = require('speakeasy');//2FA Google Auth
 const qrcode = require('qrcode'); //QR Generation For Google Auth
 const rateLimit = require('express-rate-limit'); //Express Rate Limit to limit repeated requests
 const session = require('express-session');
+const crypto = require('crypto'); // Used to generate random sessionID
 
 
 
@@ -55,10 +56,28 @@ const app = express();
 
 //MFA Middleware
 app.use(session({
-    secret: 'your_super_secret_key',
+    genid: () => crypto.randomUUID(), // generates random sessionID
+    secret: 'a9f!j3n@1#kd92L!q7zX^vpX0swqz8F6',
     resave: false,
-    saveUninitialized: false
+    saveUninitialized: false,
+    cookie: {
+        httpOnly: true, // client side cannot access the cookie
+        secure: false, // true if using https
+        sameSite: 'lax',
+        maxAge: 1000 * 60 * 30 // 30 session timer
+    }
 }));
+
+app.use((req, res, next) => {
+    if (!req.session.user) {
+        // If no user is found in the session, the session has expired
+        console.log('Session expired or user not logged in');
+    } else {
+        // If session is still active
+        console.log(`Session is active. User: ${req.session.user}`);
+    }
+    next(); // Continue to the next middleware or route
+});
 
 app.use(express.static('public'));
 //cookie parser
@@ -91,9 +110,13 @@ app.get('/moviesPage', function (req, res) {
 })
 
 app.get('/login', function (req, res) {
-    res.render('login', {
-        title: 'Login'
-    });
+    if (req.session.user) {
+        // If the user is logged in, redirect to the dashboard
+        res.redirect('/dashboard');
+    } else {
+        // If not logged in, render the login page
+        res.render('login', { title: 'Login' });  // Render login page
+    }
 });
 
 app.get('/signup', function (req, res) {
@@ -102,6 +125,24 @@ app.get('/signup', function (req, res) {
     });
 });
 
+app.get('/dashboard', (req, res) => {
+    if (!req.session.user) {
+        // If no user is found, redirect to login
+        return res.redirect('/login');
+    }
+
+    // If session is active, proceed to dashboard
+    res.render('dashboard', { user: req.session.user });
+});
+
+app.post('/logout', (req, res) => {
+    req.session.destroy((err) => {
+        if (err) {
+            return res.status(500).send('Could not log out. Please try again.');
+        }
+        res.redirect('/login');  // Redirect to login page after logout
+    });
+});
 
 //start server
 app.listen(3000, function () {
@@ -203,8 +244,15 @@ app.post('/verify-mfa', async (req, res) => {
         return res.status(401).json({ message: 'Invalid MFA token' });
     }
 
-    req.session.user = username;
+    // Regenerates session preventing session fixation attacks
+    req.session.regenerate((err) => {
+        if (err) {
+            return res.status(500).json({ message: 'Error regenerating session' });
+        }
+
+        req.session.user = username;
+        res.json({ message: 'Login successful with MFA' });
+    });
     delete req.session.pendingUser;
-    res.json({ message: 'Login successful with MFA' });
 });
 
