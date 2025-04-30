@@ -4,9 +4,12 @@ const path = require("path");
 const cookieParser = require('cookie-parser');
 const { doubleCsrf } = require('csrf-csrf'); //Fixed Correct import from csrf to double csrf
 //MFA Libraries
-const speakeasy = require('speakeasy');
-const qrcode = require('qrcode');
+const speakeasy = require('speakeasy');//2FA Google Auth
+const qrcode = require('qrcode'); //QR Generation For Google Auth
+const rateLimit = require('express-rate-limit'); //Express Rate Limit to limit repeated requests
 const session = require('express-session');
+
+
 
 //Post Gres SQL
 const { Pool } = require('pg');
@@ -18,6 +21,13 @@ const db = new Pool({
     password: 'DSSUG06', // PostgreSQL password
     port: 5432,
 });
+//Request Limiter
+const loginLimiter = rateLimit({
+    windowMs: 60 * 1000, // 1 minute
+    max: 5,
+    message: { message: 'Too many login attempts. Please try again later.' }
+});
+
 //Encryption/Hashing
 const bcrypt = require('bcrypt');
 
@@ -148,17 +158,19 @@ app.post('/verify-signup', async (req, res) => {
 
 
 //Verify Login for USERNAME + PASSWORD
-app.post('/login-step-1', async (req, res) => {
+app.post('/login-step-1', loginLimiter, async (req, res) => {
     const { username, password } = req.body;
     const user = await getUser(username);
 
+    await new Promise(resolve => setTimeout(resolve, 1000)); //Delay to prevent timing attacks
+
     if (!user || !user.mfa_verified) {
-        return res.status(401).json({ message: 'User not found or MFA not set' });
+        return res.status(401).json({ message: 'Invalid username or password' }); //Generic User Message
     }
 
     const match = await bcrypt.compare(password, user.password);
     if (!match) {
-        return res.status(401).json({ message: 'Invalid password' });
+        return res.status(401).json({ message: 'Invalid username or password' }); //Generic User Message
     }
 
     req.session.pendingUser = username;
