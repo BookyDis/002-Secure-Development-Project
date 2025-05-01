@@ -98,6 +98,10 @@ app.get("/", function (req, res) {
 
 //adding other routes
 app.get('/postsPage', function (req, res) {
+    const csrfToken = generateCsrfToken(req, res);
+  // You could also pass the token into the context of a HTML response.
+    res.json({ csrfToken });
+    
     res.render('postsPage', {
         title: 'Posts'
     })
