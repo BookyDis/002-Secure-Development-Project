@@ -64,7 +64,7 @@ app.use(session({
         httpOnly: true, // client side cannot access the cookie
         secure: false, // true if using https
         sameSite: 'lax',
-        maxAge: 1000 * 60 * 30 // 30 session timer
+        maxAge: 1000 * 60 * 30 // 30 minute session timer
     }
 }));
 
@@ -136,7 +136,7 @@ app.get('/dashboard', (req, res) => {
 });
 
 app.post('/logout', (req, res) => {
-    req.session.destroy((err) => {
+    req.session.destroy((err) => { // destroy the session
         if (err) {
             return res.status(500).send('Could not log out. Please try again.');
         }

@@ -135,11 +135,13 @@ footer{
 #movieContainer{
     border: 2px solid rgb(0, 0, 159);
     text-align: center;
+    margin: 10px;
 }
 
 #postContainer{
     border: 2px solid rgb(0, 0, 159);
     text-align: center;
+    margin: 10px;
 }
 
 .fixedFooter{
@@ -278,4 +280,10 @@ button[type="submit"]:hover {
 .arrowIcon {
     width: 30px;
     height: 30px;
+}
+
+.homePageTitle{
+    color: rgb(0, 0, 159);
+    padding-top: 20px;
+    font-size: 48px;
 }
