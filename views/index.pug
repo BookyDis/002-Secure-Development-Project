@@ -5,5 +5,13 @@ block content
         div(id="movieAndPostContainer")
             div(id="movieContainer")
                 h1 New Movies
+                div(class="galleryContainer")
+                    div(class="galleryImageWrapper")
+                        img(id="galleryMainImage" src="https://image.tmdb.org/t/p/original/ljsZTbVsrQSqZgWeep2B1QiDKuh.jpg")
+                        div(class="galleryArrow galleryArrowLeft" onclick="prevImage('gallery')")
+                            img(src="/images/leftArrow.png" class="arrowIcon")
+                        div(class="galleryArrow galleryArrowRight" onclick="nextImage('gallery')")
+                            img(src="/images/rightArrow.png" class="arrowIcon")
             div(id="postContainer")
                 h1 Recent Posts
+    script(src="/javascript/gallery.js")
