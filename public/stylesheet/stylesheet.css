@@ -135,11 +135,13 @@ footer{
 #movieContainer{
     border: 2px solid rgb(0, 0, 159);
     text-align: center;
+    margin: 10px;
 }
 
 #postContainer{
     border: 2px solid rgb(0, 0, 159);
     text-align: center;
+    margin: 10px;
 }
 
 .fixedFooter{
@@ -224,4 +226,64 @@ button[type="submit"]:hover {
 
 .movie-card h3 {
     margin: 0 0 10px;
+}
+
+.galleryContainer {
+    position: relative;
+    width: 100%;
+    max-width: 1000px;
+    margin: 50px auto;
+}
+
+.galleryImageWrapper {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+#galleryMainImage {
+    height: 500px;
+    width: 500px;
+    display: flex;
+}
+
+#gallery2MainImage {
+    height: 500px;
+    width: 1000px;
+    display: block;
+}
+
+.galleryArrow {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    background: rgba(0, 0, 0, 0.4);
+    padding: 10px;
+    border-radius: 50%;
+    cursor: pointer;
+    opacity: 0;
+    transition: opacity 0.3s;
+}
+
+.galleryArrowLeft {
+    left: 20px;
+}
+
+.galleryArrowRight {
+    right: 20px;
+}
+
+.galleryImageWrapper:hover .galleryArrow {
+    opacity: 1;
+}
+
+.arrowIcon {
+    width: 30px;
+    height: 30px;
+}
+
+.homePageTitle{
+    color: rgb(0, 0, 159);
+    padding-top: 20px;
+    font-size: 48px;
 }
