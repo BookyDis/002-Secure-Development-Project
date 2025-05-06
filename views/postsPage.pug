@@ -1,3 +1,24 @@
-extends layout 
+extends layout
 
 block content
+  h2 Posts Page
+
+  if user
+    form(action="/posts", method="POST")
+      div.formGroup
+        label(for="title") Title:
+        input(type="text", name="title", required)
+      div.formGroup
+        label(for="content") Review:
+        textarea(name="content", required)
+      input(type="hidden", name="_csrf", value=csrfToken)
+      button(type="submit") Post
+
+  if posts && posts.length
+    each post in posts
+      div.post
+        h3= post.title
+        p= post.content
+        small Posted by #{post.author} on #{post.created_at}
+  else
+    p No posts yet.

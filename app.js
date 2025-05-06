@@ -111,13 +111,6 @@ app.get("/", function (req, res) {
     });
 });
 
-//adding other routes
-app.get('/postsPage', function (req, res) {
-    res.render('postsPage', {
-        title: 'Posts'
-    })
-})
-
 app.get('/moviesPage', function (req, res) {
     res.render('moviesPage', {
         title: 'Movies'
@@ -255,5 +248,39 @@ app.post('/verify-mfa', async (req, res) => {
         res.json({ message: 'Login successful with MFA' });
     });
     delete req.session.pendingUser;
+});
+
+app.post('/posts', async (req, res) => {
+    const { title, content } = req.body;
+
+    if (!req.session.user) {
+        return res.status(401).send('Unauthorized');
+    }
+
+    try {
+        await db.query(
+            'INSERT INTO posts (title, content, author) VALUES ($1, $2, $3)',
+            [title, content, req.session.user]
+        );
+        res.redirect('/postsPage');
+    } catch (error) {
+        console.error('Error inserting post:', error);
+        res.status(500).send('Server error');
+    }
+});
+
+app.get('/postsPage', async (req, res) => {
+    try {
+        const result = await db.query('SELECT * FROM posts ORDER BY created_at DESC');
+        res.render('postsPage', {
+            title: 'Posts',
+            posts: result.rows,
+            user: req.session.user,
+            csrfToken: generateToken(req)
+        });
+    } catch (error) {
+        console.error('Error fetching posts:', error);
+        res.status(500).send('Error loading posts');
+    }
 });
 
