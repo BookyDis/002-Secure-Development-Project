@@ -1,5 +1,17 @@
 let currentUser = '';
+let csrfToken = '';
 
+// Fetch the CSRF token once on page load
+window.addEventListener('DOMContentLoaded', async () => {
+    try {
+        const res = await fetch('/csrf-token');
+        const data = await res.json();
+        csrfToken = data.csrfToken;
+    } catch (err) {
+        alert('Failed to fetch CSRF token');
+        console.error(err);
+    }
+});
 // Step 1: Submit username and password
 async function loginStep1(event) {
     event.preventDefault();
@@ -9,7 +21,9 @@ async function loginStep1(event) {
 
     const res = await fetch('/login-step-1', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: { 'Content-Type': 'application/json',
+            //send csrf token along with the header 
+            'x-csrf-token': csrfToken },
         body: JSON.stringify({ username, password })
     });
 
@@ -29,7 +43,9 @@ async function verifyMFA(event) {
 
     const res = await fetch('/verify-mfa', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: { 'Content-Type': 'application/json',
+            //send csrf token along with the header 
+            'x-csrf-token': csrfToken },
         body: JSON.stringify({ username: currentUser, token })
     });
 

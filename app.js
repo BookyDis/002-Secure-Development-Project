@@ -1,8 +1,6 @@
 const express = require("express");
 const path = require("path");
-//csrf-csrf library requirement
-const cookieParser = require('cookie-parser');
-const { doubleCsrf } = require('csrf-csrf'); //Fixed Correct import from csrf to double csrf
+const { csrfSync } = require("csrf-sync");
 //MFA Libraries
 const speakeasy = require('speakeasy');//2FA Google Auth
 const qrcode = require('qrcode'); //QR Generation For Google Auth
@@ -68,27 +66,16 @@ app.use(session({
     }
 }));
 
-//cookie parser
-app.use(cookieParser());
-
-//middleware for csrf-csrf
 const {
-    invalidCsrfTokenError,
-    validateRequest,
-    generateToken,
-    doubleCsrfProtection
-} = doubleCsrf({
-    getSecret: (req) => "my secret",
-    getSessionIdentifier: (req) => req.session.id,
-    cookieName: "__Host-psifi.x-csrf-token",
-    cookieOptions: {
-        sameSite: "lax",
-        path: "/",
-        secure: false,
-        httpOnly: false
-    },
-    getTokenFromRequest: (req) => req.headers["x-csrf-token"]
-});
+    invalidCsrfTokenError, // This is just for convenience if you plan on making your own middleware.
+    generateToken, // Use this in your routes to generate, store, and get a CSRF token.
+    getTokenFromRequest, // use this to retrieve the token submitted by a user
+    getTokenFromState, // The default method for retrieving a token from state.
+    storeTokenInState, // The default method for storing a token in state.
+    revokeToken, // Revokes/deletes a token by calling storeTokenInState(undefined)
+    csrfSynchronisedProtection, // This is the default CSRF protection middleware.
+  } = csrfSync();
+
 
 app.use((req, res, next) => {
     if (!req.session.user) {
@@ -104,32 +91,19 @@ app.use((req, res, next) => {
 app.use(express.static('public'));
 //middleware for parsing JSON bodies as per csrf-csrf requirement
 app.use(express.json());
+//for form data
+app.use(express.urlencoded({ extended: true })); 
 //load view engine
 app.set("views", path.join(__dirname, "views"));
 app.set("view engine", "pug");
 
-//middle to generate csrf token for all requests
 app.get("/csrf-token", (req, res) => {
-    const token = generateToken(req, res);
-    // Explicitly set the CSRF token cookie so the browser has it
-    res.cookie("__Host-psifi.x-csrf-token", token, {
-        sameSite: "lax",
-        path: "/",
-        secure: false,
-        httpOnly: false
-    });
-    return res.json({ token });
+    const token = generateToken(req); // Generate CSRF token
+    res.json({ csrfToken: token }); // Send the token to the client
 });
-// error handling middleware for invalid CSRF token
-app.use((err, req, res, next) => {
-    if (err instanceof invalidCsrfTokenError) {
-        res.status(403).json({
-            error: "Invalid CSRF token"
-        });
-        return;
-    }
-    next(err);
-});
+//delcare that every request that isn't GET 
+app.use(csrfSynchronisedProtection); 
+
 //home route
 app.get("/", function (req, res) {
     res.render("index", {
@@ -155,8 +129,9 @@ app.get('/login', function (req, res) {
         // If the user is logged in, redirect to the dashboard
         res.redirect('/dashboard');
     } else {
+        
         // If not logged in, render the login page
-        res.render('login', { title: 'Login' });  // Render login page
+        res.render('login', { title: 'Login'});  // Render login page
     }
 });
 
@@ -165,6 +140,14 @@ app.get('/signup', function (req, res) {
         title: 'Sign Up'
     });
 });
+
+// app.get('/signup', function (req, res) {
+//     const csrfToken = generateToken(req); // Generate CSRF token
+//     res.render('signup', {
+//         title: 'Sign Up',
+//         csrfToken
+//     });
+// });
 
 app.get('/dashboard', (req, res) => {
     if (!req.session.user) {
@@ -176,7 +159,7 @@ app.get('/dashboard', (req, res) => {
     res.render('dashboard', { user: req.session.user });
 });
 
-app.post('/logout', doubleCsrfProtection, (req, res) => {
+app.post('/logout',  (req, res) => {
     req.session.destroy((err) => { // destroy the session
         if (err) {
             return res.status(500).send('Could not log out. Please try again.');
@@ -191,7 +174,7 @@ app.listen(3000, function () {
 })
 
 //MFA Signup
-app.post('/signup', doubleCsrfProtection,  async (req, res) => {
+app.post('/signup',  async (req, res) => {
     const { username, password } = req.body;
 
     const existing = await getUser(username);
@@ -210,7 +193,7 @@ app.post('/signup', doubleCsrfProtection,  async (req, res) => {
 
 
 //MFA Verify Signup
-app.post('/verify-signup', doubleCsrfProtection, async (req, res) => {
+app.post('/verify-signup', async (req, res) => {
     const { username, token } = req.body;
     const user = await getUser(username);
 
@@ -232,7 +215,7 @@ app.post('/verify-signup', doubleCsrfProtection, async (req, res) => {
 
 
 //Verify Login for USERNAME + PASSWORD
-app.post('/login-step-1', doubleCsrfProtection,loginLimiter, async (req, res) => {
+app.post('/login-step-1', loginLimiter, async (req, res) => {
     const { username, password } = req.body;
     const user = await getUser(username);
 
@@ -252,7 +235,7 @@ app.post('/login-step-1', doubleCsrfProtection,loginLimiter, async (req, res) =>
 });
 
 //Verify Login for MFA Token
-app.post('/verify-mfa', doubleCsrfProtection,async (req, res) => {
+app.post('/verify-mfa', async (req, res) => {
     const { token } = req.body;
     const username = req.session.pendingUser;
     const user = await getUser(username);
