@@ -2,5 +2,7 @@ extends layout
 
 block content
   h1 Dashboard
-  form(action='/logout', method='POST')
+  form(action='/logout', method='POST', onsubmit="logout(event)")
         button(type='submit') Logout
+  script(src="/javascript/logout.js")
+        
