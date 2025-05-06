@@ -28,7 +28,8 @@
     "pg": "^8.15.6",
     "pug": "^3.0.3",
     "qrcode": "^1.5.4",
-    "speakeasy": "^2.0.0"
+    "speakeasy": "^2.0.0",
+    "xss": "^1.0.15"
   },
   "devDependencies": {
     "eslint": "^9.24.0"

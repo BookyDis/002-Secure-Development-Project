@@ -141,20 +141,11 @@ app.get('/signup', function (req, res) {
     });
 });
 
-// app.get('/signup', function (req, res) {
-//     const csrfToken = generateToken(req); // Generate CSRF token
-//     res.render('signup', {
-//         title: 'Sign Up',
-//         csrfToken
-//     });
-// });
-
 app.get('/dashboard', (req, res) => {
     if (!req.session.user) {
         // If no user is found, redirect to login
         return res.redirect('/login');
     }
-
     // If session is active, proceed to dashboard
     res.render('dashboard', { user: req.session.user });
 });
