@@ -1,13 +1,15 @@
 const express = require("express");
 const path = require("path");
+//csrf library
 const { csrfSync } = require("csrf-sync");
+// xss library
+const xss = require("xss");
 //MFA Libraries
 const speakeasy = require('speakeasy');//2FA Google Auth
 const qrcode = require('qrcode'); //QR Generation For Google Auth
 const rateLimit = require('express-rate-limit'); //Express Rate Limit to limit repeated requests
 const session = require('express-session');
 const crypto = require('crypto'); // Used to generate random sessionID
-
 
 
 //Post Gres SQL
@@ -144,6 +146,7 @@ app.get('/dashboard', (req, res) => {
 });
 
 app.post('/logout',  (req, res) => {
+    
     req.session.destroy((err) => { // destroy the session
         if (err) {
             return res.status(500).send('Could not log out. Please try again.');
@@ -252,7 +255,6 @@ app.post('/verify-mfa', async (req, res) => {
 
 app.post('/posts', async (req, res) => {
     const { title, content } = req.body;
-
     if (!req.session.user) {
         return res.status(401).send('Unauthorized');
     }
