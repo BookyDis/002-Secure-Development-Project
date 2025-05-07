@@ -14,7 +14,7 @@ window.addEventListener('DOMContentLoaded', async () => {
 
     const postForm = document.querySelector('#postForm');
     if (!postForm) {
-        // Form is not on this page — exit early
+        // Form is not on this page ï¿½ exit early
         return;
     }
 
@@ -61,3 +61,31 @@ window.addEventListener('DOMContentLoaded', async () => {
     });
 });
 
+ // Function to handle the delete post button click
+async function deletePost(event) {
+    event.preventDefault();
+
+    const form = event.target.closest('form');
+    const postId = form.querySelector('input[name="postId"]').value;
+
+    const res = await fetch('/deletePost', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json',
+           //send csrf token along with the header
+           'x-csrf-token': csrfToken
+         },
+         body: JSON.stringify({ postId })
+    });
+
+    const data = await res.json();
+    if (!res.ok) {
+        console.error('Error deleting post:', data.message || 'Unknown error');
+        alert(data.message || 'Failed to delete post.');
+        return;
+    } else {
+        // Reload the page to reflect the changes
+        alert(data.message || 'Delete post succesfully');
+        window.location.reload();
+    }
+    
+}

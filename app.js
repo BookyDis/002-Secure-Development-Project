@@ -319,3 +319,41 @@ app.get('/postsPage', async (req, res) => {
     }
 });
 
+app.post('/logout', (req, res) => {
+    req.session.destroy(err => {
+        if (err) {
+            console.error('Error destroying session:', err);
+            return res.status(500).send('Server error');
+        }
+        // destroy the session cookie
+        res.clearCookie('connect.sid');
+        // redirect user back to home page 
+        res.redirect('/'); // 
+    });
+});
+
+
+app.post('/deletePost', async (req, res) => { 
+    const postId = req.body.postId;
+
+    if (!req.session.user) {
+        return res.status(401).send('Unauthorized');
+    }
+
+    try {
+        // Delete the post where the postId matches and the author is the logged-in user
+        const result = await db.query(
+            'DELETE FROM posts WHERE id = $1 AND author = $2',
+            [postId, req.session.user]
+        );
+
+        if (result.rowCount === 0) {
+            return res.status(404).send('Post not found or you do not have permission to delete it');
+        }
+
+        res.status(200).json({ message: 'Post deleted successfully' });
+    } catch (error) {
+        console.error('Error deleting post:', error);
+        res.status(500).send('Server error');
+    }
+});

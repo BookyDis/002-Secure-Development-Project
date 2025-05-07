@@ -26,5 +26,8 @@ block content
         h3= post.title
         p= post.content
         small Posted by #{post.author} on #{post.created_at}
+        form(action='/deletePost', method='POST', onsubmit="deletePost(event)")
+                              input(type='hidden', name='postId', value=post.id)
+                              button(type='submit') Delete Post
   else
     p No posts yet.
