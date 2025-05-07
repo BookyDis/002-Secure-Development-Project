@@ -136,23 +136,28 @@ app.get('/signup', function (req, res) {
     });
 });
 
-app.get('/dashboard', (req, res) => {
+app.get('/dashboard', async (req, res) => {
     if (!req.session.user) {
         // If no user is found, redirect to login
         return res.redirect('/login');
     }
     // If session is active, proceed to dashboard
-    res.render('dashboard', { user: req.session.user });
-});
+    try {
+        // Fetch only posts created by the logged-in user
+        const result = await db.query(
+            'SELECT * FROM posts WHERE author = $1 ORDER BY created_at DESC',
+            [req.session.user]
+        );
 
-app.post('/logout',  (req, res) => {
-    
-    req.session.destroy((err) => { // destroy the session
-        if (err) {
-            return res.status(500).send('Could not log out. Please try again.');
-        }
-        res.redirect('/login');  // Redirect to login page after logout
-    });
+        // Render the dashboard with user posts
+        res.render('dashboard', {
+            user: req.session.user,
+            posts: result.rows
+        });
+    } catch (error) {
+        console.error('Error loading user posts:', error);
+        res.status(500).send('Server error loading dashboard');
+    }
 });
 
 //start server
@@ -274,13 +279,28 @@ app.post('/posts', async (req, res) => {
 });
 
 app.get('/postsPage', async (req, res) => {
+    const search = req.query.search; //gets search term from the search bar
+
+    let query = 'SELECT * FROM posts'; // base sql
+    let params = [];
+
+    // if there is a search term, add a where clause, this is what is actually filtering
+    if (search) {
+        query += ' WHERE title ILIKE $1 OR content ILIKE $1'; //ILIKE is case insensitive
+        params.push(`%${search}%`); // can match partial strings
+    }
+
+    // parameterized queries with placeholders ($1), and passing values separately by 'params' array, prtects against SQL injection
+    query += ' ORDER BY created_at DESC'; // new posts first
+
     try {
-        const result = await db.query('SELECT * FROM posts ORDER BY created_at DESC');
+        const result = await db.query(query, params);
         res.render('postsPage', {
             title: 'Posts',
-            posts: result.rows,
+            posts: result.rows, // matching posts
             user: req.session.user,
-            csrfToken: generateToken(req)
+            csrfToken: generateToken(req), // csrf protection
+            search
         });
     } catch (error) {
         console.error('Error fetching posts:', error);

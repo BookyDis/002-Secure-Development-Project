@@ -2,6 +2,10 @@ extends layout
 
 block content
   h2 Posts Page
+  
+  form(action="/postsPage", method="get")
+    input(type="text", name="search", placeholder="Search posts...", value=(search || ''))
+    button(type="submit") Search
 
   if user
     form#postForm
