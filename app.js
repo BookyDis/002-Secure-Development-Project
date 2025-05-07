@@ -107,10 +107,21 @@ app.get("/csrf-token", (req, res) => {
 app.use(csrfSynchronisedProtection); 
 
 //home route
-app.get("/", function (req, res) {
-    res.render("index", {
-        title: "Home"
-    });
+app.get("/", async function (req, res) {
+    try {
+        // Fetch the 3 most recent posts
+        const result = await db.query(
+            'SELECT * FROM posts ORDER BY created_at DESC LIMIT 3'
+        );
+
+        res.render("index", {
+            title: "Home",
+            recentPosts: result.rows || [] // Pass the posts to the view
+        });
+    } catch (error) {
+        console.error("Error fetching recent posts:", error);
+        res.status(500).send("Error loading home page");
+    }
 });
 
 app.get('/moviesPage', function (req, res) {

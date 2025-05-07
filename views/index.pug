@@ -14,4 +14,12 @@ block content
                             img(src="/images/rightArrow.png" class="arrowIcon")
             div(id="postContainer")
                 h1(class="homePageTitle") Recent Posts
+                if recentPosts.length > 0
+                    each post in recentPosts
+                        div(class="postCard")
+                            h2= post.title
+                            p= post.content
+                            p(class="postMeta") Posted by #{post.author} on #{new Date(post.created_at).toDateString()}
+                else
+                    p No posts yet.
     script(src="/javascript/gallery.js")
