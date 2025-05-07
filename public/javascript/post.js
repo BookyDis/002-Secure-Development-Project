@@ -5,7 +5,6 @@ window.addEventListener('DOMContentLoaded', async () => {
         const res = await fetch('/csrf-token');
         const data = await res.json();
         csrfToken = data.csrfToken;
-        console.log('CSRF token fetched:', csrfToken);
     } catch (err) {
         console.error('Failed to fetch CSRF token:', err);
         alert('Failed to fetch CSRF token');
