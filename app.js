@@ -163,7 +163,7 @@ app.get('/dashboard', async (req, res) => {
         // Render the dashboard with user posts
         res.render('dashboard', {
             user: req.session.user,
-            posts: result.rows
+            posts: result.rows,
         });
     } catch (error) {
         console.error('Error loading user posts:', error);
