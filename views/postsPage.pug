@@ -19,15 +19,12 @@ block content
   else
     p You must be logged in to submit a post.
 
+  h2(id="postsTitle") Posts
   if posts && posts.length
     each post in posts
       div.post
         h3= post.title
         p= post.content
         small Posted by #{post.author} on #{post.created_at}
-
-        form(action='/deletePost', method='POST')
-          input(type='hidden', name='postId', value=post.id)
-          button(type='submit') Delete Post
   else
     p No posts yet.

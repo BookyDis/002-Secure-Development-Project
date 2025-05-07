@@ -1,11 +1,8 @@
 extends layout 
 
 block content
-      h1 Dashboard
-            form(action='/logout', method='POST', onsubmit="logout(event)")
-            button(type='submit') Logout
-
-      h2 Your Posts
+      h1(id="dashboard") Dashboard
+      h2(id="dashboardPosts") Your Posts
       if posts && posts.length
             each post in posts
                   div.post
@@ -14,6 +11,7 @@ block content
                         small Posted on #{post.created_at}
       else
             p You haven't made any posts yet.
+      form(action='/logout', method='POST', onsubmit="logout(event)")
+            button(type='submit') Logout
       script(src="/javascript/logout.js")
-      script(src="/javascript/deletePost.js")
         
