@@ -4,15 +4,16 @@ block content
   h2 Posts Page
 
   if user
-    form(action="/posts", method="POST")
+    form#postForm
       div.formGroup
         label(for="title") Title:
-        input(type="text", name="title", required)
+        input(type="text", name="title", id="postTitle", required)
       div.formGroup
         label(for="content") Review:
-        textarea(name="content", required)
-      input(type="hidden", name="_csrf", value=csrfToken)
+        textarea(name="content", id="content", required)
       button(type="submit") Post
+  else
+    p You must be logged in to submit a post.
 
   if posts && posts.length
     each post in posts

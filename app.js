@@ -257,12 +257,14 @@ app.post('/posts', async (req, res) => {
         return res.status(401).send('Unauthorized');
     }
 
+    console.log('New post:', title, content); //Debug log
+
     try {
         await db.query(
             'INSERT INTO posts (title, content, author) VALUES ($1, $2, $3)',
             [title, content, req.session.user]
         );
-        res.redirect('/postsPage');
+        res.status(200).json({ message: 'Post created' });
     } catch (error) {
         console.error('Error inserting post:', error);
         res.status(500).send('Server error');
