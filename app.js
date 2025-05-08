@@ -179,14 +179,17 @@ app.listen(3000, function () {
 //MFA Signup
 app.post('/signup',  async (req, res) => {
     const { username, password } = req.body;
+    
+    const sanitizedUsername = xss(username); //Sanitize username to prevent XSS attacks
+    const sanitizedPassword = xss(password); //Sanitize password to prevent XSS attacks
 
-    const existing = await getUser(username);
+    const existing = await getUser(sanitizedUsername);
     if (existing) {
         return res.status(400).json({ message: 'User already exists' });
     }
 
-    const secret = speakeasy.generateSecret({ name: `MyApp (${username})` });
-    await createUser(username, password, secret.base32);
+    const secret = speakeasy.generateSecret({ name: `MyApp (${sanitizedUsername})` });
+    await createUser(sanitizedUsername, sanitizedPassword, secret.base32);
 
     qrcode.toDataURL(secret.otpauth_url, (err, data_url) => {
         if (err) return res.status(500).send('QR code error');
@@ -224,6 +227,9 @@ app.post('/login-step-1', loginLimiter, async (req, res) => {
 
     await new Promise(resolve => setTimeout(resolve, 1000)); //Delay to prevent timing attacks
 
+    const sanitizedUsername = xss(username); //Sanitize username to prevent XSS attacks
+    const sanitizedPassword = xss(password); //Sanitize password to prevent XSS attacks
+    
     if (!user || !user.mfa_verified) {
         return res.status(401).json({ message: 'Invalid username or password' }); //Generic User Message
     }
@@ -233,7 +239,7 @@ app.post('/login-step-1', loginLimiter, async (req, res) => {
         return res.status(401).json({ message: 'Invalid username or password' }); //Generic User Message
     }
 
-    req.session.pendingUser = username;
+    req.session.pendingUser = sanitizedUsername;
     res.json({ message: 'Password valid. Proceed with MFA.' });
 });
 
@@ -242,7 +248,8 @@ app.post('/verify-mfa', async (req, res) => {
     const { token } = req.body;
     const username = req.session.pendingUser;
     const user = await getUser(username);
-
+    
+    
     if (!user || !user.mfa_secret) {
         return res.status(400).json({ message: 'Invalid session or user' });
     }
@@ -275,12 +282,16 @@ app.post('/posts', async (req, res) => {
         return res.status(401).send('Unauthorized');
     }
 
+    
     console.log('New post:', title, content); //Debug log
+    //Redeclare user's input but apply xss protection to prevent XSS attacks
+    const sanitizedTitle = xss(title);
+    const sanitizedContent = xss(content); 
 
     try {
         await db.query(
             'INSERT INTO posts (title, content, author) VALUES ($1, $2, $3)',
-            [title, content, req.session.user]
+            [sanitizedTitle, sanitizedContent, req.session.user]
         );
         res.status(200).json({ message: 'Post created' });
     } catch (error) {
@@ -295,8 +306,10 @@ app.get('/postsPage', async (req, res) => {
     let query = 'SELECT * FROM posts'; // base sql
     let params = [];
 
+    // sanitize search input to prevent XSS attacks
+    const sanitizedSearch = xss(search);
     // if there is a search term, add a where clause, this is what is actually filtering
-    if (search) {
+    if (sanitizedSearch) {
         query += ' WHERE title ILIKE $1 OR content ILIKE $1'; //ILIKE is case insensitive
         params.push(`%${search}%`); // can match partial strings
     }
