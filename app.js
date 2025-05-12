@@ -1,6 +1,6 @@
 const express = require("express");
 const path = require("path");
-//csrf library
+//csrf library because the server is managed with session so csrf-sync is used rather than csrf-csrf
 const { csrfSync } = require("csrf-sync");
 // xss library
 const xss = require("xss");
@@ -10,7 +10,8 @@ const qrcode = require('qrcode'); //QR Generation For Google Auth
 const rateLimit = require('express-rate-limit'); //Express Rate Limit to limit repeated requests
 const session = require('express-session');
 const crypto = require('crypto'); // Used to generate random sessionID
-
+//Encryption/Hashing
+const bcrypt = require('bcrypt');
 
 //Post Gres SQL
 const { Pool } = require('pg');
@@ -29,8 +30,6 @@ const loginLimiter = rateLimit({
     message: { message: 'Too many login attempts. Please try again later.' }
 });
 
-//Encryption/Hashing
-const bcrypt = require('bcrypt');
 
 async function getUser(username) {
     const res = await db.query('SELECT * FROM users WHERE username = $1', [username]);
