@@ -1,0 +1,3 @@
+In order to run this website you will need to install packages required by the server.
+by running this command: npm install express express-session csrf-sync xss speakeasy qrcode express-rate-limit bcrypt pg pug
+Then you will need to type in the terminal: npm run dev and go to localhost:3000 to access the website
