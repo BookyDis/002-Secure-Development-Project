@@ -4,20 +4,17 @@ block content
     div(id="signupContainer")
         h2 Sign Up
 
-        // Step 1: Username + Password + Confirm Password
+        // Step 1: Username + Password
         div(id="step-1")
             form(id="signupForm", onsubmit="signup(event)")
                 div(class="formGroup")
                     label(for="username") Username:
-                    input(type="text", name="username", id="username", required)
+                    input(type="text" name="username" id="username" required)
                 div(class="formGroup")
                     label(for="password") Password:
-                    input(type="password", name="password", id="password", required)
-                div(class="formGroup")
-                    label(for="confirmPassword") Confirm Password:
-                    input(type="password", name="confirmPassword", id="confirmPassword", required)
+                    input(type="password" name="password" id="password" required)
                 button(type="submit") Sign Up
-        a(href="/login") Login
+        a(href="/Login") Login
 
         // Step 2: Show QR code and verify MFA token
         div(id="step-2", style="display:none;")
@@ -26,8 +23,9 @@ block content
 
             h3 Enter MFA Token
             form(id="verifyForm", onsubmit="verifySignup(event)")
-                input(type="hidden", name="_csrf token", value=csrfToken)
-                input(type="text", id="token", placeholder="6-digit token" required)
+                input(type="hidden" name="_csrf token" value=csrfToken)
+                input(type="text" id="token" placeholder="6-digit token" required)
                 button(type="submit") Verify Token
     // External JavaScript for signup logic 
     script(src="/javascript/signup.js")
+    
