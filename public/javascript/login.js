@@ -1,7 +1,7 @@
 let currentUser = '';
 
 
-// Fetch the CSRF token once on page load
+//fetch csrf token on page load
 window.addEventListener('DOMContentLoaded', async () => {
     let csrfToken = '';
     try {

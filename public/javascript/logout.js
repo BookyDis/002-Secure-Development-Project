@@ -1,6 +1,6 @@
 let csrfToken = '';
 
-// Fetch the CSRF token once on page load
+//fetch csrf token on page load
 window.addEventListener('DOMContentLoaded', async () => {
     try {
         const res = await fetch('/csrf-token');

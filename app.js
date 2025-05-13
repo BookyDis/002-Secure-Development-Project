@@ -1,6 +1,6 @@
 const express = require("express");
 const path = require("path");
-//csrf library because the server is managed with session so csrf-sync is used rather than csrf-csrf
+//csrf library because the server is managed with session so csrf-sync is used
 const { csrfSync } = require("csrf-sync");
 // xss library
 const xss = require("xss");
@@ -67,14 +67,11 @@ app.use(session({
     }
 }));
 
+//extracting fucntions from csrf-sync
 const {
-    invalidCsrfTokenError, // This is just for convenience if you plan on making your own middleware.
-    generateToken, // Use this in your routes to generate, store, and get a CSRF token.
-    getTokenFromRequest, // use this to retrieve the token submitted by a user
-    getTokenFromState, // The default method for retrieving a token from state.
-    storeTokenInState, // The default method for storing a token in state.
-    revokeToken, // Revokes/deletes a token by calling storeTokenInState(undefined)
-    csrfSynchronisedProtection, // This is the default CSRF protection middleware.
+    invalidCsrfTokenError, // function to handle invalid CSRF token errors
+    generateToken, // this function is used to generate a csrf token
+    csrfSynchronisedProtection, // the default CSRF protection middleware.
   } = csrfSync();
 
 
@@ -98,11 +95,13 @@ app.use(express.urlencoded({ extended: true }));
 app.set("views", path.join(__dirname, "views"));
 app.set("view engine", "pug");
 
+//endpoint to generate and send csrf token
 app.get("/csrf-token", (req, res) => {
-    const token = generateToken(req); // Generate CSRF token
-    res.json({ csrfToken: token }); // Send the token to the client
+    const token = generateToken(req); // generate CSRF token
+    res.json({ csrfToken: token }); // send the token to the client
 });
-//delcare that every request that isn't GET 
+
+//delcare that every request that isn't GET , OPTIONS or HEAD will be protected by csrf
 app.use(csrfSynchronisedProtection); 
 
 //home route
@@ -178,9 +177,10 @@ app.listen(3000, function () {
 //MFA Signup
 app.post('/signup',  async (req, res) => {
     const { username, password } = req.body;
-    
-    const sanitizedUsername = xss(username); //Sanitize username to prevent XSS attacks
-    const sanitizedPassword = xss(password); //Sanitize password to prevent XSS attacks
+
+    //Sanitize user's input to prevent XSS attacks
+    const sanitizedUsername = xss(username); 
+    const sanitizedPassword = xss(password); 
 
     const existing = await getUser(sanitizedUsername);
     if (existing) {
@@ -226,8 +226,9 @@ app.post('/login-step-1', loginLimiter, async (req, res) => {
 
     await new Promise(resolve => setTimeout(resolve, 1000)); //Delay to prevent timing attacks
 
-    const sanitizedUsername = xss(username); //Sanitize username to prevent XSS attacks
-    const sanitizedPassword = xss(password); //Sanitize password to prevent XSS attacks
+    //Sanitize user's input to prevent XSS attacks
+    const sanitizedUsername = xss(username); 
+    const sanitizedPassword = xss(password); 
     
     if (!user || !user.mfa_verified) {
         return res.status(401).json({ message: 'Invalid username or password' }); //Generic User Message
@@ -283,7 +284,7 @@ app.post('/posts', async (req, res) => {
 
     
     console.log('New post:', title, content); //Debug log
-    //Redeclare user's input but apply xss protection to prevent XSS attacks
+    //Sanitize user's input to prevent XSS attacks
     const sanitizedTitle = xss(title);
     const sanitizedContent = xss(content); 
 
@@ -305,7 +306,7 @@ app.get('/postsPage', async (req, res) => {
     let query = 'SELECT * FROM posts'; // base sql
     let params = [];
 
-    // sanitize search input to prevent XSS attacks
+   //Sanitize user's input to prevent XSS attacks
     const sanitizedSearch = xss(search);
     // if there is a search term, add a where clause, this is what is actually filtering
     if (sanitizedSearch) {
