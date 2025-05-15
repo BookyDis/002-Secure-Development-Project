@@ -13,42 +13,12 @@ window.addEventListener('DOMContentLoaded', async () => {
     }
 });
 
-//Common password blacklist
-const commonPasswords = [
-    '123456', 'password', '12345678', 'qwerty', '123456789', '12345', '1234', '111111', '1234567'
-];
-
-function validatePasswordSecurity(password, confirmPassword) {
-    if (password !== confirmPassword) {
-        return 'Passwords do not match.';
-    }
-    if (password.length < 8) {
-        return 'Password must be at least 8 characters long.';
-    }
-    if (password.length > 64) {
-        return 'Password must be less than 64 characters.';
-    }
-    if (commonPasswords.includes(password)) {
-        return 'Password is too common. Please choose a more secure one.';
-    }
-    
-    return null; // no errors
-}
-
- // Step 1: Sign up and get QR code
+ // Step 1: Sign up and get QR code+
  async function signup(event) {
      event.preventDefault();
 
      const username = document.getElementById('username').value;
      const password = document.getElementById('password').value;
-     const confirmPassword = document.getElementById('confirmPassword').value;
-     currentUser = username;
-
-     const validationError = validatePasswordSecurity(password, confirmPassword);
-     if (validationError) {
-         alert(validationError);
-         return;
-     }
 
      const res = await fetch('/signup', {
          method: 'POST',
